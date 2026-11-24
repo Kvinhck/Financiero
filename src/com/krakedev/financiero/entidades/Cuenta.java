@@ -11,7 +11,10 @@ public class Cuenta {
 		this.id = id;
 		this.saldoActual = 0;
 		this.tipo = "A";
+		this.propietario = new Cliente();
 	}
+	
+	
 	
 
 	public Cliente getPropietario() {
