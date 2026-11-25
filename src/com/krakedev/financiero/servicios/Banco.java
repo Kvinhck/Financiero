@@ -53,4 +53,18 @@ public class Banco {
 		cuenta.setSaldoActual(nuevoSaldo);
 		return true;
 	}
+	
+	public boolean transferir(Cuenta origen, Cuenta destino, double monto) {
+		if (origen == null || destino == null) {
+			return false;
+		}
+		if (!retirar(monto, origen)) {
+			return false;
+		}
+		if (!depositar(monto, destino)) {
+			depositar(monto, origen);
+			return false;
+		}
+		return true;
+	}
 }

@@ -96,5 +96,51 @@ public class TestBanco {
 		Banco banco = new Banco();
 
 		assertFalse(banco.retirar(20.0, null));
-	}		
+	}
+	
+	@Test
+	public void probarTransferenciaValida() {
+		Banco banco = new Banco();
+		Cliente cliente1 = new Cliente("1755073123", "Andres", "Vera");
+		Cliente cliente2 = new Cliente("1712345678", "Camila", "Lopez");
+
+		Cuenta origen = banco.crearCuenta(cliente1);
+		Cuenta destino = banco.crearCuenta(cliente2);
+		banco.depositar(300.0, origen);
+
+		boolean resultado = banco.transferir(origen, destino, 120.0);
+
+		assertTrue(resultado);
+		assertEquals(180.0, origen.getSaldoActual());
+		assertEquals(120.0, destino.getSaldoActual());
+	}
+
+	@Test
+	public void probarTransferenciaSinSaldoSuficienteOMontoInvalido() {
+		Banco banco = new Banco();
+		Cliente cliente1 = new Cliente("1755073123", "Andres", "Vera");
+		Cliente cliente2 = new Cliente("1712345678", "Camila", "Lopez");
+
+		Cuenta origen = banco.crearCuenta(cliente1);
+		Cuenta destino = banco.crearCuenta(cliente2);
+		banco.depositar(50.0, origen);
+
+		assertFalse(banco.transferir(origen, destino, 100.0));
+		assertFalse(banco.transferir(origen, destino, 0.0));
+		assertFalse(banco.transferir(origen, destino, -15.0));
+		assertEquals(50.0, origen.getSaldoActual());
+		assertEquals(0.0, destino.getSaldoActual());
+	}
+
+	@Test
+	public void probarTransferenciaConCuentaNula() {
+		Banco banco = new Banco();
+		Cliente cliente1 = new Cliente("1755073123", "Andres", "Vera");
+		Cuenta cuenta = banco.crearCuenta(cliente1);
+		banco.depositar(100.0, cuenta);
+
+		assertFalse(banco.transferir(null, cuenta, 20.0));
+		assertFalse(banco.transferir(cuenta, null, 20.0));
+		assertEquals(100.0, cuenta.getSaldoActual());
+	}
 }
